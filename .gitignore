@@ -2,3 +2,5 @@
 .bundle
 Gemfile.lock
 pkg/*
+zendesk.yml
+benchmark.rb
