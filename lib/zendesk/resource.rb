@@ -61,14 +61,15 @@ class Zendesk::Resource
   end
 
   def load_accessors(attrs = {})
+    puts attrs.inspect
     attributes.each do |attr|
-      instance_variable_set("@#{attr}", attrs[attr.to_s])
+      instance_variable_set("@#{attr.to_s}", attrs[attr.to_sym])
     end
   end
 
   def load_protected_attributes(attrs = {})
     protected_attributes.each do |attr|
-      instance_variable_set("@#{attr}", attrs[attr.to_s])
+      instance_variable_set("@#{attr.to_s}", attrs[attr.to_sym])
     end
   end
 
