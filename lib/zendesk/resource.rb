@@ -1,76 +1,65 @@
 require 'rest_client'
+require 'yaml'
 class Zendesk::Resource
   include ActiveSupport::Callbacks
 
 
-  CONFIG = YAML.load_file(ENV['CONFIG'] || 'config.yml')
+  # TODO: Make load file as optional
+  CONFIG = YAML.load_file('zendesk.yml')
   RESOURCE = RestClient::Resource.new CONFIG['host'], :user => CONFIG['user'], :password => CONFIG['password'], :timeout => 20, :open_timeout => 1
 
-  attr_reader :data, :attributes, :protected_attributes
+  @@attributes = []
+  @@protected_attributes = []
+
+  attr_reader :attributes, :protected_attributes
 
   def initialize(attributes = {})
-    load_accessors(attributes)
+    @attributes = @@attributes
+    @protected_attributes = @@protected_attributes
+    [:attributes, :protected_attributes].each do |attr_name|
+      class_eval do
+        define_method "load_#{attr_name}" do |attrs|
+          return if attrs.blank?
+          send(attr_name).each do |attr|
+            instance_variable_set(:"@#{attr.to_s}", attrs[attr.to_s])
+          end
+        end
+      end
+    end
+    
+    load_attributes(attributes) 
   end
 
   def self.find(id)
     begin
-      data = load_data(RESOURCE["#{self.to_s.demodulize.downcase.pluralize}/#{id}.json"].get)
-      new_object = self.new(data)
-      new_object.load_protected_attributes(data)
-      new_object
+      self.new().load(id)
+      rescue
+        nil
+    end
+  end
+
+  def load(id)
+    begin
+      data = load_data(RESOURCE["#{self.class.to_s.demodulize.downcase.pluralize}/#{id}.json"].get)
+      load_attributes(data)
+      load_protected_attributes(data)
+      self
     rescue
       nil
     end
   end
 
-
-  def self.attr_accessor(*vars)
-    @attributes ||= []
-    @attributes.concat vars
-    super(*vars)
+  def self.attributes(*vars)
+    @@attributes.concat vars
+    attr_accessor *vars
   end
 
-  def self.attr_reader(*vars)
-    @protected_attributes ||= []
-    @protected_attributes.concat vars
-    super(*vars)
-  end
-  
-  
-  def self.attributes
-    @attributes
-  end
-  
-  def attributes
-    self.class.attributes
+  def self.protected_attributes(*vars)
+    @@protected_attributes.concat vars
+    attr_reader *vars
   end
 
-  def self.protected_attributes
-    @protected_attributes
-  end
-
-  
-  def protected_attributes
-    self.class.protected_attributes
-  end
-
-
-  def self.load_data(json_data)
-    puts JSON(json_data).inspect
+  def load_data(json_data)
     JSON(json_data)
   end
-
-  def load_accessors(attrs = {})
-    puts attrs.inspect
-    attributes.each do |attr|
-      instance_variable_set("@#{attr.to_s}", attrs[attr.to_sym])
-    end
-  end
-
-  def load_protected_attributes(attrs = {})
-    protected_attributes.each do |attr|
-      instance_variable_set("@#{attr.to_s}", attrs[attr.to_sym])
-    end
-  end
-
 end
