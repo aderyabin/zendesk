@@ -6,4 +6,24 @@ require File.dirname(__FILE__) + '/../lib/zendesk'
     Zendesk::Ticket.new.class.should == Zendesk::Ticket
   end
   
+  it 'should parse params on initialize' do
+    description = 'ticket description'
+    ticket = Zendesk::Ticket.new( :description => description )
+    ticket.description.should == description
+    ticket = Zendesk::Ticket.new( 'description' => description )
+    ticket.description.should == description
+  end
+  
+  it 'should parse fields on initialize' do
+    city = 'New York'
+    ticket = Zendesk::Ticket.new( :city => city )
+    ticket.city.should == city
+  end
+  
+  it 'should parse properties on initialize' do
+    ticket = Zendesk::Ticket.new( :ticket_type => :problem )
+    ticket.ticket_type.should == :problem
+    ticket.ticket_type_id.should  == 3
+  end
+  
 end
