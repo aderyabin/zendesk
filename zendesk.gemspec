@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Andrey Deryabin"]
   s.email       = ["aderyabin@evilmartians.com"]
   s.homepage    = "http://github.com/aderyabin/zendesk"
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Ruby wrapper around the Zendesk API}
+  s.description = %q{Ruby wrapper around the Zendesk API}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
