@@ -8,11 +8,9 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Andrey Deryabin"]
   s.email       = ["aderyabin@evilmartians.com"]
-  s.homepage    = ""
+  s.homepage    = "http://github.com/aderyabin/zendesk"
   s.summary     = %q{TODO: Write a gem summary}
   s.description = %q{TODO: Write a gem description}
-
-  s.rubyforge_project = "zendesk"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
