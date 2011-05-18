@@ -1,4 +1,4 @@
-module Zendesk::TicketConstants
+module Zendesk::Constants
   STATUS = {
     0 => :new,
     1 => :open,
