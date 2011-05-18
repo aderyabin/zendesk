@@ -38,4 +38,18 @@ module Zendesk::Constants
     29 => :chat,
     30 => :twitter_public_mention
   }
+  
+  RESTRICTION = {
+    0 => :all_tickets,
+    1 => :group_tickets,
+    2 => :organization_tickers,
+    3 => :assigned_tickets,
+    4 => :user_tickets
+  }
+  
+  ROLE = {
+    0 => :end_user,
+    2 => :administrator,
+    4 => :agent
+  }
 end

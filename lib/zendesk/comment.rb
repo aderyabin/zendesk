@@ -1,18 +1,15 @@
 class Zendesk::Comment < Zendesk::Resource
-
-  attributes :created_at, :via_id, :value, :type, :is_public, :author_id, :attachments
+  include Zendesk::Constants
+  
+  properties :via
+  datetimes :created_at
+  attributes :value, :type, :is_public, :author_id, :attachments
   protected_attributes :ticket_id
 
-  def initialize(attributes = {})
-    load_attributes(attributes) 
-    @ticket_id = attributes[:ticket_id] || attributes['ticket_id']
+  def initialize(attrs = {})
+    @ticket_id ||= attrs[:ticket_id] || attrs['ticket_id']
     @is_public ||= false
     super
-  end
-
-  def self.create(attributes = {})
-    instance = new(attributes)
-    instance.save
   end
 
   def to_xml    

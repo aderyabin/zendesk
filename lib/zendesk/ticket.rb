@@ -1,5 +1,6 @@
 class Zendesk::Ticket < Zendesk::Resource
  include Zendesk::Constants
+ include Zendesk::RestObject
   
   datetimes :created_at, :updated_at
   attributes :subject, :description, :status, :assignee_id, :requester_name, :requester_email
@@ -12,10 +13,7 @@ class Zendesk::Ticket < Zendesk::Resource
     
   def initialize(attrs = {})
     @comments = []
-
     load_fields
-    load_attributes(attrs)
-    load_properties(attrs)
     super
   end
   
@@ -33,9 +31,12 @@ class Zendesk::Ticket < Zendesk::Resource
     end
   end
   
-  def self.create(attributes = {})
-    instance = new(attributes)
-    instance.save
+  def user
+    if assignee_id
+      @user ||= Zendesk::User.find(assignee_id)
+    else
+      @user = nil
+    end
   end
   
   def create_comment(value, is_public = true)
@@ -43,59 +44,6 @@ class Zendesk::Ticket < Zendesk::Resource
       reload
     else
       false
-    end
-  end
-  
-  
-  def self.find(id)
-    begin
-      self.new().load(id)
-    rescue Exception => e
-      puts e.message
-      nil
-    end
-  end
-
-  def load(id)
-    begin
-      data = load_data(RESOURCE["#{self.class.to_s.demodulize.downcase.pluralize}/#{id}.json"].get)
-      load_attributes(data)
-      load_protected_attributes(data)
-      load_field_entries(data)
-      load_comments(data)
-      self
-    rescue Exception => e
-      puts e.message
-      nil
-    end
-  end
-  
-  def save
-    begin
-      response = if self.id
-          RESOURCE["tickets/#{id}.xml"].put self.to_xml, :content_type => 'application/xml'
-        else  
-          RESOURCE["tickets.xml"].post self.to_xml, :content_type => 'application/xml'
-        end
-      if (200..300).include?(response.headers[:status].to_i)
-        load(id || response.headers[:location].scan(/\d+/).first.to_i)
-        return true
-      else
-        return false
-      end
-    rescue Exception => e
-      puts e.message
-      return false
-    end
-  end
-  
-  def reload
-    return false unless id
-    begin
-      load(id)
-    rescue Exception => e
-      puts e.message
-      nil
     end
   end
   
@@ -127,7 +75,7 @@ class Zendesk::Ticket < Zendesk::Resource
   end
   
   def load_fields
-    attr_keys = CONFIG['ticket'] || {}
+    attr_keys = Zendesk::CONFIG['ticket'] || {}
     @field_ids = {}
     field_names = attr_keys.keys
     unless field_names.blank?
