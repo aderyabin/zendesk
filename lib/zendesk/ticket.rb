@@ -39,7 +39,11 @@ class Zendesk::Ticket < Zendesk::Resource
   end
   
   def create_comment(value, is_public = true)
-    
+    if Zendesk::Comment.create(:ticket_id => self.id, :value => value, :is_public => is_public)
+      reload
+    else
+      false
+    end
   end
   
   

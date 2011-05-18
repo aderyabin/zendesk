@@ -1,4 +1,3 @@
-require 'active_support'
 module Zendesk::Properties
   module ClassMethods
     
@@ -8,7 +7,6 @@ module Zendesk::Properties
     @@_protected_attributes = []
     @@_properties = []
     @@_datetimes = []
-    
     
     def attributes(*vars)
       @@_attributes.concat vars
