@@ -21,7 +21,7 @@ class Zendesk::Ticket < Zendesk::Resource
   def load_field_entries(data)
     data['ticket_field_entries'].each do |field_entry|
       method_name = @field_ids.index(field_entry['ticket_field_id'])
-      send("#{method_name}=", field_entry['value'])
+      send("#{method_name}=", field_entry['value']) if method_name
     end
   end
   
