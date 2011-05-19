@@ -18,6 +18,8 @@ class Zendesk::Ticket < Zendesk::Resource
     super
   end
   
+  # Filling field methods from imported data.
+  # If field is not pointed in config it will be missed
   def load_field_entries(data)
     data['ticket_field_entries'].each do |field_entry|
       method_name = @field_ids.index(field_entry['ticket_field_id'])
@@ -87,5 +89,4 @@ class Zendesk::Ticket < Zendesk::Resource
       field_names.each{ |field_name| self.class.attributes field_name.to_sym }
     end
   end
-  
 end
