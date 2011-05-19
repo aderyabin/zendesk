@@ -1,0 +1,8 @@
+== 0.1.1
+
+* bugfix
+  * fixed tags in ticket
+  * removed gem dependencies
+
+* enhancements
+  * set tags as attributes in ticket
