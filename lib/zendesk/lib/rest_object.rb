@@ -3,6 +3,7 @@ module Zendesk::RestObject
     def create(attrs = {})
       instance = new(attrs)
       instance.save
+      instance
     end
 
     def find(id)
