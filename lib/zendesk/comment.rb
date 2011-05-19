@@ -18,7 +18,7 @@ class Zendesk::Comment < Zendesk::Resource
 
   def save
     begin
-      response = RESOURCE["tickets/#{ticket_id}.xml"].put self.to_xml, :content_type => 'application/xml'
+      response = resource["tickets/#{ticket_id}.xml"].put self.to_xml, :content_type => 'application/xml'
       return (200..300).include?(response.headers[:status].to_i)
     rescue Exception => e
       puts e.message

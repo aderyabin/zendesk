@@ -76,7 +76,7 @@ class Zendesk::Ticket < Zendesk::Resource
   end
   
   def load_fields
-    attr_keys = Zendesk::CONFIG['ticket'] || {}
+    attr_keys = Zendesk.config['ticket'] || {}
     @field_ids = {}
     field_names = attr_keys.keys
     unless field_names.blank?
