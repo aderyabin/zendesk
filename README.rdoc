@@ -1,6 +1,6 @@
 = zendesk
 
-Description goes here.
+Ruby wrapper around the Zendesk API
 
 == Contributing to zendesk
  
