@@ -14,6 +14,7 @@ class Zendesk::Ticket < Zendesk::Resource
   def initialize(attrs = {})
     @comments = []
     load_fields
+    self.tags= attrs[:tags] || attrs['tags']
     super
   end
   
@@ -67,7 +68,7 @@ class Zendesk::Ticket < Zendesk::Resource
   end
   
   def tags
-    @current_tags.split()
+    @current_tags.try(:split)
   end
   
   def tags=(tags)

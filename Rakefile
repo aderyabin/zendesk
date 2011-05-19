@@ -2,6 +2,8 @@
 
 require 'rubygems'
 require 'bundler'
+require 'rake/rdoctask'
+
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
@@ -13,7 +15,6 @@ require 'rake'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "zendesk"
   gem.homepage = "http://github.com/aderyabin/zendesk"
   gem.license = "MIT"
@@ -21,5 +22,4 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Ruby wrapper around the Zendesk API}
   gem.email = "deriabin@gmail.com"
   gem.authors = ["Andrey Deryabin"]
-  # dependencies defined in Gemfile
 end
