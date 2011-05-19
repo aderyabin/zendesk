@@ -17,13 +17,13 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
+    "CHANGELOG.rdoc",
     "Gemfile",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
     "lib/zendesk.rb",
-    "lib/zendesk/CHANGELOG.rdoc",
     "lib/zendesk/comment.rb",
     "lib/zendesk/lib/constants.rb",
     "lib/zendesk/lib/properties.rb",
