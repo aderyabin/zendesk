@@ -27,8 +27,8 @@ require File.dirname(__FILE__) + '/../lib/zendesk'
   end
   
   it 'should convert to xml' do
-    ticket = Zendesk::Ticket.new( :description => 'ticket_description', :tags => 'one two three' )
-    ticket.to_xml.should == "<ticket><description>ticket_description</description><set-tags>one two three</set_tags></ticket>"
+    ticket = Zendesk::Ticket.new( :description => 'ticket_description', :tags => 'one_two' )
+    ticket.to_xml.should == "<ticket><description>ticket_description</description><set-tags>one_two</set-tags></ticket>"
   end
   
 end
