@@ -1,12 +1,26 @@
 module Zendesk::Properties
   module ClassMethods
     
-    mattr_accessor :_attributes, :_protected_attributes, :_properties, :_datetimes
-    
     @@_attributes = []
     @@_protected_attributes = []
     @@_properties = []
     @@_datetimes = []
+    
+    def _attributes
+      @@_attributes
+    end
+    
+    def _protected_attributes
+      @@_protected_attributes
+    end
+    
+    def _properties
+      @@_properties
+    end
+    
+    def _datetimes
+      @@_datetimes
+    end
     
     def attributes(*vars)
       @@_attributes.concat vars
@@ -46,7 +60,7 @@ module Zendesk::Properties
 
         class_eval <<-END
         def #{method_name}=(value)
-          @#{method_name}_id = #{method_name.upcase}.index(value)
+          @#{method_name}_id = #{method_name.upcase}.key(value)
         end
         END
       end

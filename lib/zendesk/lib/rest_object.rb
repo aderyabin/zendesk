@@ -1,11 +1,5 @@
 module Zendesk::RestObject
   module ClassMethods
-    def create(attrs = {})
-      instance = new(attrs)
-      instance.save
-      instance
-    end
-
     def find(id)
       begin
         new().load(id)
@@ -17,16 +11,16 @@ module Zendesk::RestObject
   end
 
   module InstanceMethods
-    def path
-      self.class.to_s.demodulize.downcase.pluralize
+    def model_name
+      self.class.to_s.gsub(/^.*::/, '').downcase
     end
     
     def save
       begin
         response = if self.id
-          Zendesk.resource["#{path}/#{id}.xml"].put self.to_xml, :content_type => 'application/xml'
+          Zendesk.resource["#{model_name}s/#{id}.xml"].put self.to_xml, :content_type => 'application/xml'
         else  
-          Zendesk.resource["#{path}.xml"].post self.to_xml, :content_type => 'application/xml'
+          Zendesk.resource["#{model_name}s.xml"].post self.to_xml, :content_type => 'application/xml'
         end
         if (200..300).include?(response.headers[:status].to_i)
           load(id || response.headers[:location].scan(/\d+/).first.to_i)
@@ -52,7 +46,7 @@ module Zendesk::RestObject
     
     def load(id)
       begin
-        data = load_data(Zendesk.resource["#{path}/#{id}.xml"].get)[path.singularize]
+        data = load_data(Zendesk.resource["#{model_name}s/#{id}.xml"].get)[model_name.to_sym]
         load_attributes(data)
         load_protected_attributes(data)
         load_field_entries(data) if respond_to?(:load_field_entries)

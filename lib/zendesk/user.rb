@@ -14,6 +14,6 @@ class Zendesk::User < Zendesk::Resource
   def to_xml
     result = {}
     attributes.each{|attr| result[attr] = instance_variable_get(:"@#{attr.to_s}") }
-    result.to_xml(:skip_instruct => true, :root=>:user)
+    SimpleXML.xml_out result, 'RootName' =>:user, 'AttrPrefix' => true
   end
 end

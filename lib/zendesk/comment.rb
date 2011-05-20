@@ -13,12 +13,12 @@ class Zendesk::Comment < Zendesk::Resource
   end
 
   def to_xml    
-    { :value => value, :is_public => is_public }.to_xml(:skip_instruct => true, :root=>:comment)
+    Zendesk.xml_out({:comment => { :value => value, :is_public => is_public }})
   end
 
   def save
     begin
-      response = resource["tickets/#{ticket_id}.xml"].put self.to_xml, :content_type => 'application/xml'
+      response = Zendesk.resource["tickets/#{ticket_id}.xml"].put self.to_xml, :content_type => 'application/xml'
       return (200..300).include?(response.headers[:status].to_i)
     rescue Exception => e
       puts e.message
