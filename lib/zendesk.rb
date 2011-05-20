@@ -55,7 +55,6 @@ module Zendesk
 
   def self.xml_out(hash)
     doc = REXML::Document.new 
-    doc << REXML::XMLDecl.new('1.0', 'UTF-8')
     doc.add_element hash_elements_to_xml(hash.keys[0], hash.values[0])
     doc.to_s
   end  

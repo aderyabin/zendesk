@@ -60,12 +60,13 @@ class Zendesk::Ticket < Zendesk::Resource
       end
     end
     
-    result[:ticket_field_entries] = []
+    ticket_field_entries = []
     @field_ids.each_pair do |key, value|
       if val = instance_variable_get(:"@#{key.to_s}")
-        result[:ticket_field_entries] << { :ticket_field_id => value, :value => val.to_s }
+        ticket_field_entries << { :ticket_field_id => value, :value => val.to_s }
       end
     end
+     result[:ticket_field_entries] = ticket_field_entries unless ticket_field_entries.empty?
     
     result[:set_tags] = current_tags if current_tags
     Zendesk.xml_out({:ticket => result})
