@@ -60,7 +60,7 @@ module Zendesk::Properties
 
         class_eval <<-END
         def #{method_name}=(value)
-          @#{method_name}_id = #{method_name.upcase}.key(value)
+          @#{method_name}_id = #{method_name.upcase}.map{ |k,v| v==value ? k : nil }.compact.first
         end
         END
       end

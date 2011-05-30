@@ -4,7 +4,7 @@ class Zendesk::Ticket < Zendesk::Resource
   
   datetimes :created_at, :updated_at
   attributes :subject, :description, :status, :assignee_id, :requester_name, :requester_email
-  protected_attributes :nice_id, :priority_id, :status_id, :via_id, :ticket_type_id, :current_tags, :comments
+  protected_attributes :nice_id, :priority_id, :status_id, :via_id, :ticket_type_id, :current_tags, :comments, :requester_id
   properties :status, :ticket_type, :priority, :via
 
 
@@ -23,7 +23,7 @@ class Zendesk::Ticket < Zendesk::Resource
   def load_field_entries(data)
     if data[:ticket_field_entries]
       data[:ticket_field_entries].each do |field_entry|
-        method_name = @field_ids.key(field_entry[:ticket_field_id])
+        method_name = @field_ids.select{ |k,v| v == field_entry[:ticket_field_entry][:ticket_field_id] }.first.first
         send("#{method_name}=", field_entry[:value]) if method_name
       end
     end
@@ -36,12 +36,23 @@ class Zendesk::Ticket < Zendesk::Resource
     end
   end
   
-  def user
+  
+  
+  def assignee
     if assignee_id
-      @user ||= Zendesk::User.find(assignee_id)
+      @assignee ||= Zendesk::User.find(assignee_id)
     else
-      @user = nil
+      @assignee = nil
     end
+  end
+  
+  def requester
+    if requester_id
+      @requester ||= Zendesk::User.find(requester_id)
+    else
+      @requester = nil
+    end
+    
   end
   
   def create_comment(value, is_public = true)
@@ -73,7 +84,7 @@ class Zendesk::Ticket < Zendesk::Resource
   end
   
   def tags
-    @current_tags.try(:split)
+    @current_tags.split()
   end
   
   def tags=(tags)

@@ -24,7 +24,17 @@ module Zendesk
   end
 
   def self.resource
-    @resource ||= RestClient::Resource.new config['host'], :user => config['user'], :password => config['password'], :timeout => 20, :open_timeout => 1
+    @resource ||= RestClient::Resource.new "http://#{config['sitename']}.zendesk.com/", :user => config['user'], :password => config['password'], :timeout => 20, :open_timeout => 1
+  end
+  
+  def self.push(url, method, data = nil, on_behalf_of = nil)
+    content_type = { :content_type => 'application/xml'}
+    content_type.merge!({ 'X-On-Behalf-Of' => on_behalf_of }) if on_behalf_of
+    if data
+      Zendesk.resource[url].send method.to_sym, data, content_type
+    else
+      Zendesk.resource[url].send method.to_sym, content_type
+    end
   end
 
   def self.xml_in(xml_data)
